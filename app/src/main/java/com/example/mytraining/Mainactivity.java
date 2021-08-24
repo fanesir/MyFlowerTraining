@@ -2,13 +2,17 @@ package com.example.mytraining;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,8 +25,6 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.squareup.picasso.Picasso;
-
-import java.io.Serializable;
 
 public class Mainactivity extends AppCompatActivity {
 
@@ -41,8 +43,8 @@ public class Mainactivity extends AppCompatActivity {
         recyclerView.setAdapter(foreMainAdpter);
         foreMainAdpter.startListening();
 
-        floatingActionButton.setOnClickListener(v -> Mainactivity.this.startActivity(new Intent(Mainactivity.this, floatingActionButtonAddDataSome.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)));
-
+        floatingActionButton.setOnClickListener(v -> Mainactivity.this.startActivity(new Intent(Mainactivity.this, FloatingActionButtonAddDataSome.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)));
+        authority();
 
     }
 
@@ -59,12 +61,17 @@ public class Mainactivity extends AppCompatActivity {
 
             holder.firstname.setText(model.getTitle());
             holder.maindate.setText(model.getdate());
-            Picasso.get().load(model.getimgurl()).into(holder.imageView);
+
+
+                Log.i("esss",model.getimgurl()+"");
+                Picasso.get().load(model.getimgurl()).into(holder.imageView);
+
+
             DataModal dataModal = model;
 
             holder.imageButton.setOnClickListener(v -> {
-                Intent intent = new Intent(Mainactivity.this,floatingActionButtonAddDataSome.class);
-                intent.putExtra("MainactibityINFO",dataModal);//想把的内存中的对象状态保存到一个文件中或者数据库中时候
+                Intent intent = new Intent(Mainactivity.this, FloatingActionButtonAddDataSome.class);
+                intent.putExtra("MainactibityINFO", dataModal);//想把的内存中的对象状态保存到一个文件中或者数据库中时候
                 startActivity(intent);
 
             });
@@ -79,7 +86,7 @@ public class Mainactivity extends AppCompatActivity {
 
 
         class personsRecyclerViewViewholder extends RecyclerView.ViewHolder {
-            TextView firstname,maindate;
+            TextView firstname, maindate;
             ImageView imageView;
             ImageButton imageButton;
 
@@ -94,6 +101,19 @@ public class Mainactivity extends AppCompatActivity {
         }
 
 
+    }
+
+    public void authority() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)//取得權限
+
+        {//確認使否有授權
+            if (ContextCompat.checkSelfPermission(Mainactivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {//跳出來給選擇
+                ActivityCompat.requestPermissions(Mainactivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
+
+            } else {
+
+            }
+        }
     }
 
 }

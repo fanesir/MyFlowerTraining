@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".floatingActionButtonAddDataSome">
+    tools:context=".FloatingActionButtonAddDataSome">
 
     <ImageView
         android:id="@+id/editimageView"
@@ -54,5 +54,14 @@
         android:theme="@style/Button.White"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/editTitleEdtext" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="303dp"
+        android:layout_height="99dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/clockimageButton" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
