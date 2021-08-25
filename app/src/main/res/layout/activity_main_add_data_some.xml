@@ -7,17 +7,17 @@
     tools:context=".FloatingActionButtonAddDataSome">
 
     <ImageView
-        android:id="@+id/editimageView"
+        android:id="@+id/addimageView"
         android:layout_width="365sp"
         android:layout_height="341sp"
         android:layout_marginTop="28sp"
-        android:src="@drawable/common_google_signin_btn_icon_dark_normal"
+        android:src="@drawable/uplondicon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTitleEdtext"
+        android:id="@+id/addTitleEdtext"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="44dp"
@@ -28,39 +28,46 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editimageView" />
+        app:layout_constraintTop_toBottomOf="@+id/addimageView" />
 
+
+    <!--    app:layout_constraintTop_toBottomOf="@+id/editTitleEdtext"-->
 
     <Button
         android:id="@+id/buttonfish"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="16dp"
-        android:text="Button"
+        android:background="#808080"
+        android:text="上傳"
+        app:backgroundTint="@null"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.526"
+        app:layout_constraintHorizontal_bias="0.492"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/clockimageButton"
-        android:layout_width="207dp"
-        android:layout_height="72dp"
-        android:layout_marginStart="100dp"
-        android:layout_marginTop="4dp"
-        android:text="輸入時間"
-        android:textSize="20sp"
-        android:textColor="@color/black"
-        android:theme="@style/Button.White"
+        android:layout_width="211dp"
+        android:layout_height="62dp"
+        android:layout_marginTop="32dp"
+        android:background="#808080"
+        android:text="選取時間"
+        app:backgroundTint="@null"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTitleEdtext" />
+        app:layout_constraintTop_toBottomOf="@+id/addTitleEdtext" />
 
     <ProgressBar
         android:id="@+id/progressBar"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="303dp"
-        android:layout_height="99dp"
+        style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+        android:layout_width="383dp"
+        android:layout_height="31dp"
+        android:layout_marginTop="20dp"
+        android:backgroundTint="@null"
+        android:background="#808080"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.571"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/clockimageButton" />
 

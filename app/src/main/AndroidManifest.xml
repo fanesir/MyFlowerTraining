@@ -6,21 +6,22 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-
     <application
         android:allowBackup="true"
-        android:requestLegacyExternalStorage="true"
-        android:largeHeap="true"
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:largeHeap="true"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyTraining">
         <activity
+            android:name=".EditMainActivity"
+            android:exported="true" />
+        <activity
             android:name=".FloatingActionButtonAddDataSome"
             android:exported="true" />
-
         <activity
             android:name=".Mainactivity"
             android:exported="true">

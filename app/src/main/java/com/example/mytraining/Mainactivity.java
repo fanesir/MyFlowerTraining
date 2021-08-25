@@ -57,23 +57,25 @@ public class Mainactivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onBindViewHolder(@NonNull personsRecyclerViewViewholder holder, @SuppressLint("RecyclerView") int position, @NonNull DataModal model) {
+        protected void onBindViewHolder(@NonNull personsRecyclerViewViewholder holder,
+                                        @SuppressLint("RecyclerView") int position, @NonNull DataModal model) {
 
             holder.firstname.setText(model.getTitle());
             holder.maindate.setText(model.getdate());
 
-
-                Log.i("esss",model.getimgurl()+"");
-                Picasso.get().load(model.getimgurl()).into(holder.imageView);
+            Picasso.get().load(model.getimgurl()).into(holder.imageView);
 
 
             DataModal dataModal = model;
 
-            holder.imageButton.setOnClickListener(v -> {
-                Intent intent = new Intent(Mainactivity.this, FloatingActionButtonAddDataSome.class);
-                intent.putExtra("MainactibityINFO", dataModal);//想把的内存中的对象状态保存到一个文件中或者数据库中时候
-                startActivity(intent);
-
+            holder.imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(Mainactivity.this, EditMainActivity.class);
+                    intent.putExtra("MainactibityINFO", dataModal);
+                    startActivity(intent);
+                    finish();
+                }
             });
 
         }
