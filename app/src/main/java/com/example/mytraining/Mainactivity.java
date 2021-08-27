@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 public class Mainactivity extends AppCompatActivity {
@@ -65,7 +66,6 @@ public class Mainactivity extends AppCompatActivity {
 
             Picasso.get().load(model.getimgurl()).into(holder.imageView);
 
-
             DataModal dataModal = model;
 
             holder.imageButton.setOnClickListener(new View.OnClickListener() {
@@ -73,8 +73,9 @@ public class Mainactivity extends AppCompatActivity {
                 public void onClick(View v) {
                     Intent intent = new Intent(Mainactivity.this, EditMainActivity.class);
                     intent.putExtra("MainactibityINFO", dataModal);
+                    intent.putExtra("DataModalIndex", position);
                     startActivity(intent);
-                    finish();
+                   // finish();
                 }
             });
 
