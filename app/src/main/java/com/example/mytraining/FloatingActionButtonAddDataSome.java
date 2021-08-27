@@ -44,14 +44,13 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
     String datetext;
     Uri uri;
     TimePickerDialog timePickerDialog;
+    String DataModalIndex = "";
+    String EditImageURL = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_add_data_some);
-
-
-
 
         EditimageView = findViewById(R.id.addimageView);
 
@@ -65,6 +64,21 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
 
 
         clockimageButton.setOnClickListener(v -> timePickerDialog.show(FloatingActionButtonAddDataSome.this.getSupportFragmentManager(), "year_month_day"));
+
+        if (Mainactivity.ADDOREDIT == 1) {
+            clockimageButton.setText("增加時間");
+            EdedText.setText("");
+        } else if (Mainactivity.ADDOREDIT == 0) {
+
+            DataModal dataModal = (DataModal) getIntent().getSerializableExtra("MainactibityINFO");
+            DataModalIndex = (String) getIntent().getSerializableExtra("DataModalIndexKey");
+            EditImageURL = dataModal.getimgurl();
+
+            EdedText.setText(dataModal.getTitle());
+            clockimageButton.setText(dataModal.getdate());
+            Picasso.get().load(dataModal.getimgurl()).into(EditimageView);
+
+        }
 
         timePickerDialog = new TimePickerDialog.Builder()
                 .setType(Type.YEAR_MONTH_DAY)
@@ -95,22 +109,36 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
 
                             result.addOnSuccessListener(uri -> {
                                 String imageUrll = uri.toString();
-                                DataModal upload = new DataModal(EdedText.getText().toString().trim(),
-                                        imageUrll, datetext);
-                                referenceDatabase.child(new String(referenceDatabase.push().getKey())).setValue(upload);
+                                if (Mainactivity.ADDOREDIT == 1) {
+                                    DataModal upload = new DataModal(EdedText.getText().toString().trim(),
+                                            imageUrll, clockimageButton.getText().toString());
+                                    referenceDatabase.child(new String(referenceDatabase.push().getKey())).setValue(upload);
+
+                                } else if (Mainactivity.ADDOREDIT == 0) {
+                                    DataModal upload = new DataModal(EdedText.getText().toString().trim(),
+                                            imageUrll, clockimageButton.getText().toString());
+                                    referenceDatabase.child(DataModalIndex).setValue(upload);
+                                }
+
                             });
 
                             Toast.makeText(FloatingActionButtonAddDataSome.this, "成功上傳", Toast.LENGTH_LONG).show();
                             startActivity(new Intent(FloatingActionButtonAddDataSome.this, Mainactivity.class));
                             finish();
                         }).
-                        addOnFailureListener(e -> Log.i("FireBaseErrowMessage", e.getMessage()))
+                        addOnFailureListener(e -> i("FireBaseErrowMessage", e.getMessage()))
                         .addOnProgressListener(taskSnapshot -> {
                             double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot.getTotalByteCount());
                             //100.0*3932160/7842896=50.14 很像在算準確度  錯誤張數/總張數＝總準確度%
                             mProgressBar.setProgress((int) progress);
 
                         });
+            } else if (uri == null) {
+                DataModal upload = new DataModal(EdedText.getText().toString().trim(), EditImageURL, clockimageButton.getText().toString());
+                referenceDatabase.child(DataModalIndex).setValue(upload);
+                Toast.makeText(FloatingActionButtonAddDataSome.this, "成功上傳", Toast.LENGTH_LONG).show();
+                startActivity(new Intent(FloatingActionButtonAddDataSome.this, Mainactivity.class));
+                finish();
             } else {
                 Toast.makeText(FloatingActionButtonAddDataSome.this, "No file selected", Toast.LENGTH_SHORT).show();
             }

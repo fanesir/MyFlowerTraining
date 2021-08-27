@@ -18,9 +18,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyTraining">
         <activity
-            android:name=".EditMainActivity"
-            android:exported="true" />
-        <activity
             android:name=".FloatingActionButtonAddDataSome"
             android:exported="true" />
         <activity

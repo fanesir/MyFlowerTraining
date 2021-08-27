@@ -29,6 +29,7 @@ import com.squareup.picasso.Picasso;
 
 public class Mainactivity extends AppCompatActivity {
 
+    static int ADDOREDIT;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,9 +45,12 @@ public class Mainactivity extends AppCompatActivity {
         recyclerView.setAdapter(foreMainAdpter);
         foreMainAdpter.startListening();
 
-        floatingActionButton.setOnClickListener(v -> Mainactivity.this.startActivity(new Intent(Mainactivity.this, FloatingActionButtonAddDataSome.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)));
+        floatingActionButton.setOnClickListener(v -> {
+            ADDOREDIT=1;
+            Mainactivity.this.startActivity(new Intent(Mainactivity.this, FloatingActionButtonAddDataSome.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
+        }
+        );
         authority();
-
     }
 
     public class AdapterForMaimActivity extends FirebaseRecyclerAdapter
@@ -68,16 +72,15 @@ public class Mainactivity extends AppCompatActivity {
 
             DataModal dataModal = model;
 
-            holder.imageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = new Intent(Mainactivity.this, EditMainActivity.class);
-                    intent.putExtra("MainactibityINFO", dataModal);
-                    intent.putExtra("DataModalIndex", position);
-                    startActivity(intent);
-                   // finish();
-                }
+            holder.imageButton.setOnClickListener(v -> {
+                Intent intent = new Intent(Mainactivity.this, FloatingActionButtonAddDataSome.class);
+                intent.putExtra("MainactibityINFO", dataModal);
+                intent.putExtra("DataModalIndexKey", getRef(position).getKey() + "");
+                ADDOREDIT=0;
+                startActivity(intent);
+
             });
+
 
         }
 

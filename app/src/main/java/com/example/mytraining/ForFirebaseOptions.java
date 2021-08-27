@@ -7,6 +7,9 @@ import com.google.firebase.database.FirebaseDatabase;
 public class ForFirebaseOptions {
     DatabaseReference mbase;
 
+    ForFirebaseOptions() {
+
+    }
 
     ForFirebaseOptions(String getReference) {
         mbase = FirebaseDatabase.getInstance().getReference(getReference);
@@ -19,7 +22,9 @@ public class ForFirebaseOptions {
         return options;
     }
 
-
+    DatabaseReference referenceDatabase(String datafrom, String DataModalIndex) {
+        return FirebaseDatabase.getInstance().getReference().child(datafrom).child(DataModalIndex);
+    }
 
 
 }
