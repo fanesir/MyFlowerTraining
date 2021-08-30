@@ -2,6 +2,7 @@ package com.example.mytraining;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+//import androidx.appcompat.widget.PopupMenu;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -15,21 +16,26 @@ import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 public class Mainactivity extends AppCompatActivity {
 
     static int ADDOREDIT;
+    ForFirebaseOptions forFirebaseOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,26 +46,30 @@ public class Mainactivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        ForFirebaseOptions ForFirebaseOptions = new ForFirebaseOptions("data");
-        AdapterForMaimActivity foreMainAdpter = new AdapterForMaimActivity(ForFirebaseOptions.Options());
+        forFirebaseOptions = new ForFirebaseOptions("data");
+        AdapterForMaimActivity foreMainAdpter = new AdapterForMaimActivity(forFirebaseOptions.Options());
         recyclerView.setAdapter(foreMainAdpter);
         foreMainAdpter.startListening();
 
         floatingActionButton.setOnClickListener(v -> {
-            ADDOREDIT=1;
-            Mainactivity.this.startActivity(new Intent(Mainactivity.this, FloatingActionButtonAddDataSome.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
-        }
+                    ADDOREDIT = 1;
+                    Mainactivity.this.startActivity(new Intent(Mainactivity.this, FloatingActionButtonAddDataSome.class));
+                    finish();
+                }
         );
         authority();
     }
 
     public class AdapterForMaimActivity extends FirebaseRecyclerAdapter
+
             <DataModal, AdapterForMaimActivity.personsRecyclerViewViewholder> {
+
 
         public AdapterForMaimActivity(FirebaseRecyclerOptions<DataModal> options) {
             super(options);
 
         }
+
 
         @Override
         protected void onBindViewHolder(@NonNull personsRecyclerViewViewholder holder,
@@ -70,14 +80,33 @@ public class Mainactivity extends AppCompatActivity {
 
             Picasso.get().load(model.getimgurl()).into(holder.imageView);
 
-            DataModal dataModal = model;
-
             holder.imageButton.setOnClickListener(v -> {
-                Intent intent = new Intent(Mainactivity.this, FloatingActionButtonAddDataSome.class);
-                intent.putExtra("MainactibityINFO", dataModal);
-                intent.putExtra("DataModalIndexKey", getRef(position).getKey() + "");
-                ADDOREDIT=0;
-                startActivity(intent);
+
+                PopupMenu popup = new PopupMenu(holder.imageButton.getContext(), v);
+                popup.getMenuInflater().inflate(R.menu.edit_menu, popup.getMenu());
+                popup.show();
+                popup.setOnMenuItemClickListener(item -> {
+                    switch (item.getItemId()) {
+                        case R.id.item1:
+                            Intent intent = new Intent(Mainactivity.this, FloatingActionButtonAddDataSome.class);
+                            intent.putExtra("MainactibityINFO", model);
+                            intent.putExtra("DataModalIndexKey", getRef(position).getKey() + "");
+                            ADDOREDIT = 0;
+                            Mainactivity.this.finish();
+                            startActivity(intent);
+                            return true;
+
+                        case R.id.item2:
+                             forFirebaseOptions.deleData( model.getuserKey()+ "");
+
+                            return true;
+
+                    }
+
+
+                    return false;
+                });
+                popup.show();
 
             });
 
@@ -102,6 +131,7 @@ public class Mainactivity extends AppCompatActivity {
                 imageView = itemView.findViewById(R.id.FlowerimageView);
                 imageButton = itemView.findViewById(R.id.editimageView);
                 maindate = itemView.findViewById(R.id.date);
+
             }
 
         }

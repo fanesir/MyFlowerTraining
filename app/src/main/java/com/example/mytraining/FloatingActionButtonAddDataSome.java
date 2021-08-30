@@ -22,6 +22,7 @@ import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -37,6 +38,9 @@ import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 
 public class FloatingActionButtonAddDataSome extends AppCompatActivity {
@@ -90,41 +94,47 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
 
 
         EditimageView.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_PICK);
-            intent.setType("image/*");
-            FloatingActionButtonAddDataSome.this.startActivityForResult(intent, 1000);
 
+            CropImage.activity()
+                    .setGuidelines(CropImageView.Guidelines.OFF).setAspectRatio(1, 1).setMinCropResultSize(600, 600)
+                    .setRequestedSize(1000, 1000)//最後幹上去mageview的圖片畫素
+                    .setCropShape(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? CropImageView.CropShape.RECTANGLE : CropImageView.CropShape.OVAL)
+                    .start(FloatingActionButtonAddDataSome.this);
         });
 
         buttonfish.setOnClickListener(v -> {
 
             if (uri != null) {
-                StorageReference storageReference = referenceStorage.child(System.currentTimeMillis() + "." +
-                        FloatingActionButtonAddDataSome.this.getFileExtension(uri));
-                storageReference.putFile(uri)
+                StorageReference storageReference = referenceStorage.child(System.currentTimeMillis() + "." + FloatingActionButtonAddDataSome.this.getFileExtension(uri));//幹上去
+                storageReference.putFile(uri)//到剛上傳完的資料
                         .addOnSuccessListener(taskSnapshot -> {
+
                             Handler handler = new Handler();
                             handler.postDelayed(() -> mProgressBar.setProgress(0), 500);
                             Task<Uri> result = taskSnapshot.getStorage().getDownloadUrl();//圖片剛上傳的資料在這
 
                             result.addOnSuccessListener(uri -> {
                                 String imageUrll = uri.toString();
-                                if (Mainactivity.ADDOREDIT == 1) {
+                                String key=referenceDatabase.push().getKey();
+
+                                if (Mainactivity.ADDOREDIT == 1) {//新增新資料
                                     DataModal upload = new DataModal(EdedText.getText().toString().trim(),
-                                            imageUrll, clockimageButton.getText().toString());
-                                    referenceDatabase.child(new String(referenceDatabase.push().getKey())).setValue(upload);
+                                            imageUrll, clockimageButton.getText().toString(),key);
+
+
+                                    referenceDatabase.child(new String(key)).setValue(upload);
 
                                 } else if (Mainactivity.ADDOREDIT == 0) {
                                     DataModal upload = new DataModal(EdedText.getText().toString().trim(),
-                                            imageUrll, clockimageButton.getText().toString());
+                                            imageUrll, clockimageButton.getText().toString(),key);
                                     referenceDatabase.child(DataModalIndex).setValue(upload);
                                 }
 
                             });
 
                             Toast.makeText(FloatingActionButtonAddDataSome.this, "成功上傳", Toast.LENGTH_LONG).show();
-                            startActivity(new Intent(FloatingActionButtonAddDataSome.this, Mainactivity.class));
-                            finish();
+                            FloatingActionButtonAddDataSome.this.startActivity(new Intent(FloatingActionButtonAddDataSome.this, Mainactivity.class));
+                            FloatingActionButtonAddDataSome.this.finish();
                         }).
                         addOnFailureListener(e -> i("FireBaseErrowMessage", e.getMessage()))
                         .addOnProgressListener(taskSnapshot -> {
@@ -152,18 +162,26 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        if (requestCode == 1000 && resultCode == RESULT_OK & data != null && data.getData() != null) {
-            uri = data.getData();
-            Picasso.get().load(uri).into(EditimageView);
-        }
-    }
 
     public String getDateToString(long time) {
         SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date d = new Date(time);
         return sf.format(d).substring(0, 10);
     }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+        if (resultCode == RESULT_OK) {
+            uri = result.getUri();
+            Picasso.get().load(uri).into(EditimageView);
+        }
+    }
+
+    public void onBackPressed() {
+        startActivity(new Intent(FloatingActionButtonAddDataSome.this, Mainactivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
+        FloatingActionButtonAddDataSome.this.finish();
+    }
+
 }

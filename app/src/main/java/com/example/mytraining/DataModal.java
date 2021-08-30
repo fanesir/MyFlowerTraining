@@ -9,6 +9,7 @@ class DataModal implements Serializable {
     private String Content;
     private String imgurl;
     private String date;
+    private String userKey;
 
     public DataModal() {
 
@@ -20,14 +21,25 @@ class DataModal implements Serializable {
         Title = trim;
         imgurl = imageUrl;
         date = fordate;
+
     }
+
+    public DataModal(String trim, String imageUrl, String fordate,String userkey) {
+
+        Title = trim;
+        imgurl = imageUrl;
+        date = fordate;
+        userKey=userkey;
+    }
+
+
 
     public String getdate() {
         return date;
     }
 
-    public void setdate(String imgurl) {
-        this.date = imgurl;
+    public void setdate(String date) {
+        this.date = date;
     }
 
     public String getimgurl() {
@@ -52,5 +64,13 @@ class DataModal implements Serializable {
 
     public void setContent(String content) {
         this.Content = content;
+    }
+
+    public String getuserKey() {
+        return userKey;
+    }
+
+    public void setuserKey(String userKey) {
+        this.userKey = userKey;
     }
 }
