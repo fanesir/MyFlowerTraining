@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -20,23 +22,27 @@ import com.google.firebase.database.FirebaseDatabase;
 
 public class DateMainActivity extends AppCompatActivity {
 
-    DataModal dataModal;
+
     DatabaseReference mbase;
     String userkey;
+
+    DataModal dataModal;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_date_main);
         RecyclerView recyclerView = findViewById(R.id.daterecyview);
 
+
         try {
-            dataModal = (DataModal) getIntent().getSerializableExtra("MainactibityINFO");
+            DataModal dataModal = (DataModal) getIntent().getSerializableExtra("MainactibityINFO");
             mbase = FirebaseDatabase.getInstance().getReference("data").child(dataModal.getuserKey()).child("group");
-            userkey=dataModal.getuserKey();
-        }catch (NullPointerException n){
+            userkey = dataModal.getuserKey();
+        } catch (NullPointerException n) {
             String userKey = (String) getIntent().getSerializableExtra("userkey");
             mbase = FirebaseDatabase.getInstance().getReference("data").child(userKey).child("group");
-            userkey=userKey;
+            userkey = userKey;
         }
 
 
@@ -50,7 +56,7 @@ public class DateMainActivity extends AppCompatActivity {
         FloatingActionButton floatingActionButton = findViewById(R.id.addnotefloatingActionButton);
         floatingActionButton.setOnClickListener(v -> {
             Mainactivity.ADDOREDIT = 3;
-            Intent intent = new Intent(DateMainActivity.this,FloatingActionButtonAddDataSome.class);
+            Intent intent = new Intent(DateMainActivity.this, FloatingActionButtonAddDataSome.class);
             intent.putExtra("MainactibityINFO", userkey);
             startActivity(intent);
         });
@@ -67,6 +73,35 @@ public class DateMainActivity extends AppCompatActivity {
         protected void onBindViewHolder(@NonNull forDateRecyView holder, int position, @NonNull DataModelchild model) {
             holder.notetitle.setText(model.getNotetitle());
             holder.notedate.setText(model.getNotedate());
+            holder.imageButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    PopupMenu popup = new PopupMenu(holder.imageButton.getContext(), view);
+                    popup.getMenuInflater().inflate(R.menu.edit_menu, popup.getMenu());
+                    popup.show();
+                    popup.setOnMenuItemClickListener(item -> {
+                        switch (item.getItemId()) {
+                            case R.id.item1:
+                                Intent intent = new Intent(DateMainActivity.this, FloatingActionButtonAddDataSome.class);
+                                intent.putExtra("DataModelchildINFO", model);
+                                Mainactivity.ADDOREDIT = 4;
+                                finish();
+                                startActivity(intent);
+                                return true;
+
+                            case R.id.item2:
+                                ForFirebaseOptions forFirebaseOptions = new ForFirebaseOptions("data");
+                                forFirebaseOptions.deleUserData(model.getUserkey()+"",model.getUserdataKey()+"");
+                                return true;
+
+                        }
+
+
+                        return false;
+                    });
+                    popup.show();
+                }
+            });
         }
 
         @NonNull
@@ -78,15 +113,20 @@ public class DateMainActivity extends AppCompatActivity {
 
         class forDateRecyView extends RecyclerView.ViewHolder {
             TextView notetitle, notedate;
+            ImageButton imageButton;
 
             public forDateRecyView(@NonNull View itemView) {
                 super(itemView);
                 notetitle = itemView.findViewById(R.id.notetitletextview);
                 notedate = itemView.findViewById(R.id.datetitletextview);
+                imageButton = itemView.findViewById(R.id.dateimageButton);
             }
         }
 
     }
-
+    public void onBackPressed() {
+        startActivity(new Intent(DateMainActivity.this, Mainactivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
+        finish();
+    }
 
 }

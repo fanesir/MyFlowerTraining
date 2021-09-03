@@ -14,9 +14,7 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -26,10 +24,7 @@ import android.widget.TextView;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 public class Mainactivity extends AppCompatActivity {
@@ -53,7 +48,7 @@ public class Mainactivity extends AppCompatActivity {
         foreMainAdpter.startListening();
 
         floatingActionButton.setOnClickListener(v -> {
-                    ADDOREDIT = 1;
+                    ADDOREDIT = 0;
                     Mainactivity.this.startActivity(new Intent(Mainactivity.this, FloatingActionButtonAddDataSome.class));
                     finish();
                 }
@@ -91,14 +86,14 @@ public class Mainactivity extends AppCompatActivity {
                         case R.id.item1:
                             Intent intent = new Intent(Mainactivity.this, FloatingActionButtonAddDataSome.class);
                             intent.putExtra("MainactibityINFO", model);
-                            ADDOREDIT = 0;
+                            ADDOREDIT = 1;
                             Mainactivity.this.finish();
                             startActivity(intent);
                             return true;
 
                         case R.id.item2:
-                             forFirebaseOptions.deleData( model.getuserKey()+ "");
-                             return true;
+                            forFirebaseOptions.deleUser(model.getuserKey() + "");
+                            return true;
 
                     }
 
@@ -112,8 +107,7 @@ public class Mainactivity extends AppCompatActivity {
             holder.imageView.setOnClickListener(v -> {
                 Intent intent = new Intent(Mainactivity.this,DateMainActivity.class);
                 intent.putExtra("MainactibityINFO", model);
-
-               // finish();
+                finish();
                 startActivity(intent);
             });
 

@@ -29,11 +29,18 @@ public class ForFirebaseOptions<T> {
         return options;
     }
 
-    public void deleData(String userkey) {
+    public void deleUser(String userkey) {
         if (userkey == null) {
             return;
         }
         mbase.child(userkey).removeValue();
+    }
+
+    public void deleUserData(String userkey, String userdatakey) {
+        if (userkey == null) {
+            return;
+        }
+        mbase.child(userkey).child("group").child(userdatakey).removeValue();
     }
 
 

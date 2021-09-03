@@ -2,30 +2,22 @@ package com.example.mytraining;
 
 import static android.util.Log.i;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.StorageTask;
-import com.google.firebase.storage.UploadTask;
 import com.jzxiang.pickerview.TimePickerDialog;
 import com.jzxiang.pickerview.data.Type;
 
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
@@ -50,6 +42,7 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
     TimePickerDialog timePickerDialog;
     String DataModalIndex = "";
     String EditImageURL = "";
+    String UserDatakey="";
 
 
     @Override
@@ -70,10 +63,10 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
 
         clockimageButton.setOnClickListener(v -> timePickerDialog.show(FloatingActionButtonAddDataSome.this.getSupportFragmentManager(), "year_month_day"));
 
-        if (Mainactivity.ADDOREDIT == 1) {
+        if (Mainactivity.ADDOREDIT == 0) {
             clockimageButton.setText("增加時間");
             EdedText.setText("");
-        } else if (Mainactivity.ADDOREDIT == 0) {
+        } else if (Mainactivity.ADDOREDIT == 1) {
 
             DataModal dataModal = (DataModal) getIntent().getSerializableExtra("MainactibityINFO");
             DataModalIndex = dataModal.getuserKey();
@@ -83,11 +76,20 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
             clockimageButton.setText(dataModal.getdate());
             Picasso.get().load(dataModal.getimgurl()).into(EditimageView);
 
-        } else if (Mainactivity.ADDOREDIT == 3) {
+        } else if (Mainactivity.ADDOREDIT == 3) {//檔案新增
             String dataModal = (String) getIntent().getSerializableExtra("MainactibityINFO");
             DataModalIndex = dataModal;
+            EditimageView.setVisibility(View.GONE);
+        } else if (Mainactivity.ADDOREDIT == 4) {//檔案編輯
+
+            DataModelchild dataModelchild = (DataModelchild) getIntent().getSerializableExtra("DataModelchildINFO");
+            DataModalIndex = dataModelchild.getUserkey();
+            UserDatakey = dataModelchild.getUserdataKey();
 
             EditimageView.setVisibility(View.GONE);
+
+            EdedText.setText(dataModelchild.getNotetitle());
+            clockimageButton.setText(dataModelchild.getNotedate());
         }
 
         timePickerDialog = new TimePickerDialog.Builder()
@@ -123,10 +125,10 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
                                 String imageUrll = uri.toString();
 
 
-                                if (Mainactivity.ADDOREDIT == 1) {//新增新資料
+                                if (Mainactivity.ADDOREDIT == 0) {//新增新資料
                                     upDataNew(referenceDatabase, referenceDatabase.push().getKey() + "", EdedText.getText().toString(), imageUrll, clockimageButton.getText().toString());
 
-                                } else if (Mainactivity.ADDOREDIT == 0) {//編輯資料
+                                } else if (Mainactivity.ADDOREDIT == 1) {//編輯資料
                                     editData(referenceDatabase, DataModalIndex, EdedText.getText().toString(), imageUrll, clockimageButton.getText().toString());
                                 }
 
@@ -143,11 +145,13 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
                             mProgressBar.setProgress((int) progress);
 
                         });
-            } else if (Mainactivity.ADDOREDIT == 0 & uri == null) {
+            } else if (Mainactivity.ADDOREDIT == 1 & uri == null) {
                 onlyEditTitleAndDate(referenceDatabase, DataModalIndex, EdedText.getText().toString(), clockimageButton.getText().toString());
 
             } else if (Mainactivity.ADDOREDIT == 3 & uri == null) {
-                upDataThisUserData(referenceDatabase, EdedText.getText().toString(), clockimageButton.getText().toString());
+                addThisUserDataFile(referenceDatabase, EdedText.getText().toString(), clockimageButton.getText().toString());
+            } else if (Mainactivity.ADDOREDIT == 4 & uri == null) {
+                editThisUserDataFile(referenceDatabase,DataModalIndex,UserDatakey, EdedText.getText().toString(), clockimageButton.getText().toString());
             } else {
                 Toast.makeText(FloatingActionButtonAddDataSome.this, "No file selected", Toast.LENGTH_SHORT).show();
             }
@@ -177,17 +181,30 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
         finish();
     }
 
-    protected void upDataThisUserData(DatabaseReference referenceDatabase, String titleEditext, String clocktext) {
+    protected void addThisUserDataFile(DatabaseReference referenceDatabase, String titleEditext, String clocktext) {
         String key = referenceDatabase.push().getKey();
         referenceDatabase.child(DataModalIndex).child("group").child(key).child("notetitle").setValue(titleEditext);
         referenceDatabase.child(DataModalIndex).child("group").child(key).child("notedate").setValue(clocktext);
         referenceDatabase.child(DataModalIndex).child("group").child(key).child("userkey").setValue(DataModalIndex);
+        referenceDatabase.child(DataModalIndex).child("group").child(key).child("userdataKey").setValue(key);
+
 
 
         Toast.makeText(FloatingActionButtonAddDataSome.this, "成功上傳", Toast.LENGTH_LONG).show();
-        Intent intent = new Intent(FloatingActionButtonAddDataSome.this, DateMainActivity.class);
-        intent.putExtra("userkey", DataModalIndex);
-        startActivity(intent);
+        startActivity(new Intent(FloatingActionButtonAddDataSome.this, DateMainActivity.class).putExtra("userkey", DataModalIndex));
+        finish();
+    }
+
+    protected void editThisUserDataFile(DatabaseReference referenceDatabase,String DataModalIndex,String UserDatakey, String titleEditext, String clocktext) {
+
+        referenceDatabase.child(DataModalIndex).child("group").child(UserDatakey).child("notetitle").setValue(titleEditext);
+        referenceDatabase.child(DataModalIndex).child("group").child(UserDatakey).child("notedate").setValue(clocktext);
+        referenceDatabase.child(DataModalIndex).child("group").child(UserDatakey).child("userdataKey").setValue(UserDatakey);
+        referenceDatabase.child(DataModalIndex).child("group").child(UserDatakey).child("userkey").setValue(DataModalIndex);
+
+
+        Toast.makeText(FloatingActionButtonAddDataSome.this, "成功上傳", Toast.LENGTH_LONG).show();
+        startActivity(new Intent(FloatingActionButtonAddDataSome.this, DateMainActivity.class).putExtra("userkey", DataModalIndex));
         finish();
     }
 

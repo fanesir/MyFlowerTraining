@@ -53,7 +53,29 @@ class DataModal implements Serializable {
 }
 
 class DataModelchild implements Serializable {
-    private String notetitle, notedate;
+    private String notetitle;
+    private String notedate;
+    private String userkey;
+    private String userdataKey;
+
+    public String getUserdataKey() {
+        return userdataKey;
+    }
+
+    public void setUserdataKey(String userdataKey) {
+        this.userdataKey = userdataKey;
+    }
+
+
+    public String getUserkey() {
+        return userkey;
+    }
+
+    public void setUserkey(String userkey) {
+        this.userkey = userkey;
+    }
+
+
 
     public String getNotetitle() {
         return notetitle;
