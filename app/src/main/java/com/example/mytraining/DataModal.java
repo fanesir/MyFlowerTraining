@@ -4,34 +4,19 @@ import java.io.Serializable;
 
 class DataModal implements Serializable {
 
-
-    private String Title;
-    private String Content;
-    private String imgurl;
-    private String date;
-    private String userKey;
+    private String Title, imgurl, date, userKey;
 
     public DataModal() {
 
     }
 
-
-    public DataModal(String trim, String imageUrl, String fordate) {
-
-        Title = trim;
-        imgurl = imageUrl;
-        date = fordate;
-
-    }
-
-    public DataModal(String trim, String imageUrl, String fordate,String userkey) {
+    public DataModal(String trim, String imageUrl, String fordate, String userkey) {
 
         Title = trim;
         imgurl = imageUrl;
         date = fordate;
-        userKey=userkey;
+        userKey = userkey;
     }
-
 
 
     public String getdate() {
@@ -58,19 +43,31 @@ class DataModal implements Serializable {
         this.Title = title;
     }
 
-    public String getContent() {
-        return Content;
-    }
-
-    public void setContent(String content) {
-        this.Content = content;
-    }
-
     public String getuserKey() {
         return userKey;
     }
 
     public void setuserKey(String userKey) {
         this.userKey = userKey;
+    }
+}
+
+class DataModelchild implements Serializable {
+    private String notetitle, notedate;
+
+    public String getNotetitle() {
+        return notetitle;
+    }
+
+    public void setNotetitle(String notetitle) {
+        this.notetitle = notetitle;
+    }
+
+    public String getNotedate() {
+        return notedate;
+    }
+
+    public void setNotedate(String notedate) {
+        this.notedate = notedate;
     }
 }

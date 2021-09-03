@@ -4,17 +4,22 @@ import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-public class ForFirebaseOptions {
+public class ForFirebaseOptions<T> {
+
     DatabaseReference mbase;
-    String getReference;
 
     ForFirebaseOptions() {
 
     }
 
+    ForFirebaseOptions(String getReference, String key, String grop) {
+        mbase = FirebaseDatabase.getInstance().getReference(getReference).child(key).child(grop);
+
+    }
+
     ForFirebaseOptions(String getReference) {
         mbase = FirebaseDatabase.getInstance().getReference(getReference);
-        this.getReference = getReference;
+
     }
 
     public FirebaseRecyclerOptions<DataModal> Options() {
@@ -25,7 +30,7 @@ public class ForFirebaseOptions {
     }
 
     public void deleData(String userkey) {
-        if(userkey==null){
+        if (userkey == null) {
             return;
         }
         mbase.child(userkey).removeValue();

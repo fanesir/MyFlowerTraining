@@ -10,61 +10,62 @@
     android:layout_marginBottom="10dp"
     android:scrollbars="vertical"
     app:cardBackgroundColor="#F4F0F0"
-    app:cardCornerRadius="20dp">
+    app:cardCornerRadius="20sp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="300sp">
+        android:layout_height="170sp">
 
         <TextView
             android:id="@+id/textView"
             android:layout_width="201dp"
             android:layout_height="29dp"
-            android:layout_marginStart="10dp"
-            android:layout_marginTop="30sp"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="30dp"
             android:gravity="center_horizontal|left"
             android:text="TextView"
             android:textColor="@color/black"
             android:textSize="20sp"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/FlowerimageView"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/date"
             android:layout_width="135dp"
             android:layout_height="23sp"
-            android:layout_marginTop="38dp"
-            android:layout_marginEnd="5dp"
+            android:layout_marginStart="7dp"
+            android:layout_marginTop="15dp"
             android:gravity="center_horizontal|left"
             android:text="TextView"
             android:textColor="@color/black"
             android:textSize="18sp"
-            app:layout_constraintEnd_toStartOf="@+id/editimageView"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintStart_toEndOf="@+id/FlowerimageView"
+            app:layout_constraintTop_toBottomOf="@+id/textView" />
 
         <ImageButton
             android:id="@+id/editimageView"
-            android:layout_width="30dp"
-            android:layout_height="28dp"
-            android:layout_marginTop="30dp"
-            android:layout_marginEnd="5dp"
+            android:layout_width="30sp"
+            android:layout_height="30sp"
+            android:layout_marginTop="30sp"
+            android:layout_marginEnd="5sp"
             app:cardBackgroundColor="#F4F0F0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_edit" />
-<!--        android:scaleType="fitXY"-->
+            android:background="#F4F0F0"
+            app:srcCompat="@drawable/editbutton" />
+
         <ImageView
             android:id="@+id/FlowerimageView"
-            android:layout_width="379sp"
-            android:layout_height="217sp"
-            android:layout_marginEnd="6sp"
-            android:layout_marginBottom="16sp"
-            android:scaleType="fitCenter"
-
-
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
+            android:layout_width="129sp"
+            android:layout_height="129sp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="19dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_centerInParent="true"
+            app:layout_constraintTop_toTopOf="parent"
+            android:scaleType="centerCrop"
+            app:srcCompat="@drawable/common_google_signin_btn_icon_dark"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.cardview.widget.CardView>

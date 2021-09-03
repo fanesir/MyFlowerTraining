@@ -51,6 +51,7 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
     String DataModalIndex = "";
     String EditImageURL = "";
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,13 +76,18 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
         } else if (Mainactivity.ADDOREDIT == 0) {
 
             DataModal dataModal = (DataModal) getIntent().getSerializableExtra("MainactibityINFO");
-            DataModalIndex = (String) getIntent().getSerializableExtra("DataModalIndexKey");
+            DataModalIndex = dataModal.getuserKey();
             EditImageURL = dataModal.getimgurl();
 
             EdedText.setText(dataModal.getTitle());
             clockimageButton.setText(dataModal.getdate());
             Picasso.get().load(dataModal.getimgurl()).into(EditimageView);
 
+        } else if (Mainactivity.ADDOREDIT == 3) {
+            String dataModal = (String) getIntent().getSerializableExtra("MainactibityINFO");
+            DataModalIndex = dataModal;
+
+            EditimageView.setVisibility(View.GONE);
         }
 
         timePickerDialog = new TimePickerDialog.Builder()
@@ -96,8 +102,8 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
         EditimageView.setOnClickListener(v -> {
 
             CropImage.activity()
-                    .setGuidelines(CropImageView.Guidelines.OFF).setAspectRatio(1, 1).setMinCropResultSize(600, 600)
-                    .setRequestedSize(1000, 1000)//最後幹上去mageview的圖片畫素
+                    .setGuidelines(CropImageView.Guidelines.OFF).setAspectRatio(1, 1).setMinCropResultSize(129, 129)
+                    .setRequestedSize(600, 600)//最後幹上去mageview的圖片畫素
                     .setCropShape(Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? CropImageView.CropShape.RECTANGLE : CropImageView.CropShape.OVAL)
                     .start(FloatingActionButtonAddDataSome.this);
         });
@@ -115,19 +121,13 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
 
                             result.addOnSuccessListener(uri -> {
                                 String imageUrll = uri.toString();
-                                String key=referenceDatabase.push().getKey();
+
 
                                 if (Mainactivity.ADDOREDIT == 1) {//新增新資料
-                                    DataModal upload = new DataModal(EdedText.getText().toString().trim(),
-                                            imageUrll, clockimageButton.getText().toString(),key);
+                                    upDataNew(referenceDatabase, referenceDatabase.push().getKey() + "", EdedText.getText().toString(), imageUrll, clockimageButton.getText().toString());
 
-
-                                    referenceDatabase.child(new String(key)).setValue(upload);
-
-                                } else if (Mainactivity.ADDOREDIT == 0) {
-                                    DataModal upload = new DataModal(EdedText.getText().toString().trim(),
-                                            imageUrll, clockimageButton.getText().toString(),key);
-                                    referenceDatabase.child(DataModalIndex).setValue(upload);
+                                } else if (Mainactivity.ADDOREDIT == 0) {//編輯資料
+                                    editData(referenceDatabase, DataModalIndex, EdedText.getText().toString(), imageUrll, clockimageButton.getText().toString());
                                 }
 
                             });
@@ -143,18 +143,53 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
                             mProgressBar.setProgress((int) progress);
 
                         });
-            } else if (uri == null) {
-                DataModal upload = new DataModal(EdedText.getText().toString().trim(), EditImageURL, clockimageButton.getText().toString());
-                referenceDatabase.child(DataModalIndex).setValue(upload);
-                Toast.makeText(FloatingActionButtonAddDataSome.this, "成功上傳", Toast.LENGTH_LONG).show();
-                startActivity(new Intent(FloatingActionButtonAddDataSome.this, Mainactivity.class));
-                finish();
+            } else if (Mainactivity.ADDOREDIT == 0 & uri == null) {
+                onlyEditTitleAndDate(referenceDatabase, DataModalIndex, EdedText.getText().toString(), clockimageButton.getText().toString());
+
+            } else if (Mainactivity.ADDOREDIT == 3 & uri == null) {
+                upDataThisUserData(referenceDatabase, EdedText.getText().toString(), clockimageButton.getText().toString());
             } else {
                 Toast.makeText(FloatingActionButtonAddDataSome.this, "No file selected", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    protected void upDataNew(DatabaseReference referenceDatabase, String userKey
+            , String editText, String imageUrll, String clockimageButton) {
+
+        DataModal upload = new DataModal(editText,
+                imageUrll, clockimageButton, userKey);
+        referenceDatabase.child(new String(userKey)).setValue(upload);
+    }
+
+    protected void editData(DatabaseReference referenceDatabase, String userKey
+            , String editText, String imageUrll, String clockimageButton) {
+        referenceDatabase.child(userKey).child("title").setValue(editText);
+        referenceDatabase.child(userKey).child("date").setValue(clockimageButton);
+        referenceDatabase.child(userKey).child("imgurl").setValue(imageUrll);
+    }
+
+    protected void onlyEditTitleAndDate(DatabaseReference referenceDatabase, String userKey, String editText, String clockimageButton) {
+        referenceDatabase.child(userKey).child("title").setValue(editText);
+        referenceDatabase.child(userKey).child("date").setValue(clockimageButton);
+        startActivity(new Intent(FloatingActionButtonAddDataSome.this, Mainactivity.class));
+        Toast.makeText(FloatingActionButtonAddDataSome.this, "成功上傳", Toast.LENGTH_LONG).show();
+        finish();
+    }
+
+    protected void upDataThisUserData(DatabaseReference referenceDatabase, String titleEditext, String clocktext) {
+        String key = referenceDatabase.push().getKey();
+        referenceDatabase.child(DataModalIndex).child("group").child(key).child("notetitle").setValue(titleEditext);
+        referenceDatabase.child(DataModalIndex).child("group").child(key).child("notedate").setValue(clocktext);
+        referenceDatabase.child(DataModalIndex).child("group").child(key).child("userkey").setValue(DataModalIndex);
+
+
+        Toast.makeText(FloatingActionButtonAddDataSome.this, "成功上傳", Toast.LENGTH_LONG).show();
+        Intent intent = new Intent(FloatingActionButtonAddDataSome.this, DateMainActivity.class);
+        intent.putExtra("userkey", DataModalIndex);
+        startActivity(intent);
+        finish();
+    }
 
     private String getFileExtension(Uri uri) {
         ContentResolver cR = getContentResolver();
