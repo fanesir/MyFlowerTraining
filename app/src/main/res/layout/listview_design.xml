@@ -13,6 +13,7 @@
     app:cardCornerRadius="20sp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/maincardview"
         android:layout_width="match_parent"
         android:layout_height="170sp">
 
@@ -52,7 +53,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:background="#F4F0F0"
-           android:src="@color/cardview_shadow_start_color"/>
+            app:srcCompat="@drawable/ic_launcher_background"/>
 
         <ImageView
             android:id="@+id/FlowerimageView"

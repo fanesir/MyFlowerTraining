@@ -3,6 +3,7 @@ package com.example.mytraining;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 //import androidx.appcompat.widget.PopupMenu;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,7 +15,9 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
@@ -106,11 +109,10 @@ public class Mainactivity extends AppCompatActivity {
 
             holder.imageView.setOnClickListener(v -> {
                 Intent intent = new Intent(Mainactivity.this,DateMainActivity.class);
-                intent.putExtra("MainactibityINFO", model);
+                DateMainActivity.userkey=model.getuserKey();
                 finish();
                 startActivity(intent);
             });
-
 
         }
 
@@ -126,12 +128,14 @@ public class Mainactivity extends AppCompatActivity {
             ImageView imageView;
             ImageButton imageButton;
 
+
             public personsRecyclerViewViewholder(@NonNull View itemView) {
                 super(itemView);
                 firstname = itemView.findViewById(R.id.textView);
                 imageView = itemView.findViewById(R.id.FlowerimageView);
                 imageButton = itemView.findViewById(R.id.editimageView);
                 maindate = itemView.findViewById(R.id.date);
+
 
             }
 
@@ -152,7 +156,9 @@ public class Mainactivity extends AppCompatActivity {
             }
         }
     }
-
+    public void onBackPressed() {
+        finish();
+    }
 }
 
 

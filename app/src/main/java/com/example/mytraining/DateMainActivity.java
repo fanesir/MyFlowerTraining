@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CalendarView;
 import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
@@ -24,9 +25,9 @@ public class DateMainActivity extends AppCompatActivity {
 
 
     DatabaseReference mbase;
-    String userkey;
+    static String userkey;
 
-    DataModal dataModal;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -35,15 +36,8 @@ public class DateMainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.daterecyview);
 
 
-        try {
-            DataModal dataModal = (DataModal) getIntent().getSerializableExtra("MainactibityINFO");
-            mbase = FirebaseDatabase.getInstance().getReference("data").child(dataModal.getuserKey()).child("group");
-            userkey = dataModal.getuserKey();
-        } catch (NullPointerException n) {
-            String userKey = (String) getIntent().getSerializableExtra("userkey");
-            mbase = FirebaseDatabase.getInstance().getReference("data").child(userKey).child("group");
-            userkey = userKey;
-        }
+
+        mbase = FirebaseDatabase.getInstance().getReference("data").child(userkey).child("group");
 
 
         FirebaseRecyclerOptions<DataModelchild> options = new FirebaseRecyclerOptions.Builder<DataModelchild>().setQuery(mbase, DataModelchild.class).build();
@@ -59,6 +53,7 @@ public class DateMainActivity extends AppCompatActivity {
             Intent intent = new Intent(DateMainActivity.this, FloatingActionButtonAddDataSome.class);
             intent.putExtra("MainactibityINFO", userkey);
             startActivity(intent);
+            DateMainActivity.this.finish();
         });
 
     }
@@ -71,36 +66,39 @@ public class DateMainActivity extends AppCompatActivity {
         }
 
         protected void onBindViewHolder(@NonNull forDateRecyView holder, int position, @NonNull DataModelchild model) {
-            holder.notetitle.setText(model.getNotetitle());
             holder.notedate.setText(model.getNotedate());
-            holder.imageButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    PopupMenu popup = new PopupMenu(holder.imageButton.getContext(), view);
-                    popup.getMenuInflater().inflate(R.menu.edit_menu, popup.getMenu());
-                    popup.show();
-                    popup.setOnMenuItemClickListener(item -> {
-                        switch (item.getItemId()) {
-                            case R.id.item1:
-                                Intent intent = new Intent(DateMainActivity.this, FloatingActionButtonAddDataSome.class);
-                                intent.putExtra("DataModelchildINFO", model);
-                                Mainactivity.ADDOREDIT = 4;
-                                finish();
-                                startActivity(intent);
-                                return true;
+            holder.imageButton.setOnClickListener(view -> {
+                PopupMenu popup = new PopupMenu(holder.imageButton.getContext(), view);
+                popup.getMenuInflater().inflate(R.menu.edit_menu, popup.getMenu());
+                popup.show();
+                popup.setOnMenuItemClickListener(item -> {
+                    switch (item.getItemId()) {
+                        case R.id.item1:
+                            Intent intent = new Intent(DateMainActivity.this, FloatingActionButtonAddDataSome.class);
+                            intent.putExtra("DataModelchildINFO", model);
+                            Mainactivity.ADDOREDIT = 4;
+                            startActivity(intent);
+                            DateMainActivity.this.finish();
+                            return true;
 
-                            case R.id.item2:
-                                ForFirebaseOptions forFirebaseOptions = new ForFirebaseOptions("data");
-                                forFirebaseOptions.deleUserData(model.getUserkey()+"",model.getUserdataKey()+"");
-                                return true;
+                        case R.id.item2:
+                            ForFirebaseOptions forFirebaseOptions = new ForFirebaseOptions("data");
+                            forFirebaseOptions.deleUserData(model.getUserkey() + "", model.getUserdataKey() + "");
+                            return true;
 
-                        }
+                    }
 
 
-                        return false;
-                    });
-                    popup.show();
-                }
+                    return false;
+                });
+                popup.show();
+            });
+            holder.notetitle.setText(model.getNotetitle());
+
+            holder.notetitle.setOnClickListener(view -> {
+
+                DateMainActivity.this.finish();
+                startActivity(new Intent(DateMainActivity.this, NoteMainActivity.class).putExtra("forNoteData", model));
             });
         }
 
@@ -124,6 +122,7 @@ public class DateMainActivity extends AppCompatActivity {
         }
 
     }
+
     public void onBackPressed() {
         startActivity(new Intent(DateMainActivity.this, Mainactivity.class).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK));
         finish();

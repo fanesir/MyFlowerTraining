@@ -204,7 +204,8 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
 
 
         Toast.makeText(FloatingActionButtonAddDataSome.this, "成功上傳", Toast.LENGTH_LONG).show();
-        startActivity(new Intent(FloatingActionButtonAddDataSome.this, DateMainActivity.class).putExtra("userkey", DataModalIndex));
+        DateMainActivity.userkey=DataModalIndex;
+        startActivity(new Intent(FloatingActionButtonAddDataSome.this, DateMainActivity.class));
         finish();
     }
 
