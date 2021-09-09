@@ -33,9 +33,9 @@ public class NoteMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_note_main);
 
-        ImageView imageButtonNote = findViewById(R.id.imageButtonNote);
-        imageButtonNote.setVisibility(View.GONE);
-        FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButtonAddImage);
+       // ImageView imageButtonNote = findViewById(R.id.imageButtonNote);
+//        imageButtonNote.setVisibility(View.GONE);
+        //FloatingActionButton floatingActionButton = findViewById(R.id.floatingActionButtonAddImage);
 
         notetitle = findViewById(R.id.editTextTitle);
         note = findViewById(R.id.editTextNote);
@@ -68,22 +68,22 @@ public class NoteMainActivity extends AppCompatActivity {
         });
 
 
-        floatingActionButton.setOnClickListener(new View.OnClickListener() {
-            Boolean aBoolean = false;
-
-            public void onClick(View view) {
-
-                if (aBoolean == false) {
-                    imageButtonNote.setVisibility(View.VISIBLE);
-                    aBoolean = true;
-
-                } else if (aBoolean == true) {
-                    imageButtonNote.setVisibility(View.GONE);
-                    aBoolean = false;
-                }
-
-            }
-        });
+//        floatingActionButton.setOnClickListener(new View.OnClickListener() {
+//            Boolean aBoolean = false;
+//
+//            public void onClick(View view) {
+//
+//                if (aBoolean == false) {
+//                    imageButtonNote.setVisibility(View.VISIBLE);
+//                    aBoolean = true;
+//
+//                } else if (aBoolean == true) {
+//                    imageButtonNote.setVisibility(View.GONE);
+//                    aBoolean = false;
+//                }
+//
+//            }
+//        });
 
 
     }

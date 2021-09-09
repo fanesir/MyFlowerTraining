@@ -28,6 +28,7 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
 public class Mainactivity extends AppCompatActivity {
@@ -45,7 +46,7 @@ public class Mainactivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.recyview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-         forFirebaseOptions = new ForFirebaseOptions("data");
+         forFirebaseOptions = new ForFirebaseOptions(LoginActivity.USER_ID);//"data"LoginActivity.USER_ID+
         AdapterForMaimActivity foreMainAdpter = new AdapterForMaimActivity(forFirebaseOptions.Options());
         recyclerView.setAdapter(foreMainAdpter);
         foreMainAdpter.startListening();
@@ -57,13 +58,10 @@ public class Mainactivity extends AppCompatActivity {
                 }
         );
 
-        floatingActionButton.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View view) {
-                Mainactivity.this.startActivity(new Intent(Mainactivity.this, LoginActivity.class));
-                finish();
-                return false;
-            }
+        floatingActionButton.setOnLongClickListener(view -> {
+            Mainactivity.this.startActivity(new Intent(Mainactivity.this, LoginActivity.class));
+            FirebaseAuth.getInstance().signOut();
+            return false;
         });
         authority();
 

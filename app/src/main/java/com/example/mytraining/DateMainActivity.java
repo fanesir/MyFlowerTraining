@@ -36,8 +36,7 @@ public class DateMainActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.daterecyview);
 
 
-
-        mbase = FirebaseDatabase.getInstance().getReference("data").child(userkey).child("group");
+        mbase = FirebaseDatabase.getInstance().getReference(LoginActivity.USER_ID).child(userkey).child("group");
 
 
         FirebaseRecyclerOptions<DataModelchild> options = new FirebaseRecyclerOptions.Builder<DataModelchild>().setQuery(mbase, DataModelchild.class).build();
@@ -82,7 +81,7 @@ public class DateMainActivity extends AppCompatActivity {
                             return true;
 
                         case R.id.item2:
-                            ForFirebaseOptions forFirebaseOptions = new ForFirebaseOptions("data");
+                            ForFirebaseOptions forFirebaseOptions = new ForFirebaseOptions(LoginActivity.USER_ID);
                             forFirebaseOptions.deleUserData(model.getUserkey() + "", model.getUserdataKey() + "");
                             return true;
 

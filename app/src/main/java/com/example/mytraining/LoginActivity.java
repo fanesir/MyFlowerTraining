@@ -29,12 +29,14 @@ public class LoginActivity extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient;
     private FirebaseAuth mAuth;
     private static final int RC_SIGN_IN = 9001;
+    static String USER_ID;
 
     @Override
     protected void onStart() {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
+            USER_ID = user.getEmail().substring(0,5)+"";
             Intent intent = new Intent(getApplicationContext(),Mainactivity.class);
             startActivity(intent);
         }
@@ -76,7 +78,7 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-
+                USER_ID = account.getEmail().substring(0,5)+"";
                 Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId()+account.getEmail()+"");
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {

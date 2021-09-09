@@ -57,8 +57,8 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
         Button clockimageButton = findViewById(R.id.clockimageButton);
         ProgressBar mProgressBar = findViewById(R.id.progressBar);
 
-        StorageReference referenceStorage = FirebaseStorage.getInstance().getReference().child("data");
-        DatabaseReference referenceDatabase = FirebaseDatabase.getInstance().getReference().child("data");
+        StorageReference referenceStorage = FirebaseStorage.getInstance().getReference().child(LoginActivity.USER_ID);
+        DatabaseReference referenceDatabase = FirebaseDatabase.getInstance().getReference().child(LoginActivity.USER_ID);
 
 
         clockimageButton.setOnClickListener(v -> timePickerDialog.show(FloatingActionButtonAddDataSome.this.getSupportFragmentManager(), "year_month_day"));

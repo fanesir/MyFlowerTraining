@@ -9,11 +9,13 @@
 
     <ImageView
         android:id="@+id/googlelongin"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="176sp"
-        android:layout_marginTop="308sp"
+        android:layout_width="363dp"
+        android:layout_height="82dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="3dp"
+        android:layout_marginBottom="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/common_google_signin_btn_icon_dark" />
+        app:srcCompat="@drawable/googlesign" />
 </androidx.constraintlayout.widget.ConstraintLayout>
