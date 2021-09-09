@@ -48,12 +48,12 @@
             android:layout_width="30sp"
             android:layout_height="30sp"
             android:layout_marginTop="30sp"
-            android:layout_marginEnd="5sp"
+            android:layout_marginEnd="20dp"
+            android:background="#F4F0F0"
             app:cardBackgroundColor="#F4F0F0"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:background="#F4F0F0"
-            app:srcCompat="@drawable/ic_launcher_background"/>
+            app:srcCompat="@android:drawable/ic_menu_edit" />
 
         <ImageView
             android:id="@+id/FlowerimageView"

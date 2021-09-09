@@ -36,9 +36,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
-            USER_ID = user.getEmail().substring(0,5)+"";
-            Intent intent = new Intent(getApplicationContext(),Mainactivity.class);
+            USER_ID = user.getEmail().substring(0, 5) + "";
+            Intent intent = new Intent(getApplicationContext(), Mainactivity.class);
             startActivity(intent);
+            finish();
         }
     }
 
@@ -46,18 +47,10 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        ImageView imageView = findViewById(R.id.googlelongin);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                signIn();
-
-            }
-        });
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestIdToken("488765907282-vjr21r22jm6rivtacog60k56350cqd0b.apps.googleusercontent.com")//R.string.default_web_client_id
                 .requestEmail()
                 .build();
 
@@ -66,7 +59,6 @@ public class LoginActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
     }
-
 
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -78,8 +70,8 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                USER_ID = account.getEmail().substring(0,5)+"";
-                Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId()+account.getEmail()+"");
+                USER_ID = account.getEmail().substring(0, 5) + "";
+                Log.d(TAG, "firebaseAuthWithGoogle:" + account.getId() + account.getEmail() + "");
                 firebaseAuthWithGoogle(account.getIdToken());
             } catch (ApiException e) {
                 // Google Sign In failed, update UI appropriately
@@ -101,7 +93,7 @@ public class LoginActivity extends AppCompatActivity {
                             Log.d(TAG, "signInWithCredential:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
-                            Intent intent = new Intent(getApplicationContext(),Mainactivity.class);
+                            Intent intent = new Intent(getApplicationContext(), Mainactivity.class);
                             startActivity(intent);
                             finish();
                         } else {
@@ -123,5 +115,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private void updateUI(FirebaseUser user) {
 
+    }
+
+    public void googlesigin(View v) {
+        signIn();
     }
 }
