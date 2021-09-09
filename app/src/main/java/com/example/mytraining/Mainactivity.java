@@ -56,6 +56,15 @@ public class Mainactivity extends AppCompatActivity {
                     finish();
                 }
         );
+
+        floatingActionButton.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                Mainactivity.this.startActivity(new Intent(Mainactivity.this, LoginActivity.class));
+                finish();
+                return false;
+            }
+        });
         authority();
 
     }
