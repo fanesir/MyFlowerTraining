@@ -20,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -28,6 +29,7 @@ import android.widget.TextView;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.squareup.picasso.Picasso;
 
@@ -41,6 +43,11 @@ public class Mainactivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        NavigationView navigationView  = findViewById(R.id.navid);
+
+
+
+
         FloatingActionButton floatingActionButton = findViewById(R.id.addDataActionButton);
 
         RecyclerView recyclerView = findViewById(R.id.recyview);
@@ -139,7 +146,7 @@ public class Mainactivity extends AppCompatActivity {
             public personsRecyclerViewViewholder(@NonNull View itemView) {
                 super(itemView);
                 firstname = itemView.findViewById(R.id.textView);
-                imageView = itemView.findViewById(R.id.FlowerimageView);
+                imageView = itemView.findViewById(R.id.flowerimageView);
                 imageButton = itemView.findViewById(R.id.editimageView);
                 maindate = itemView.findViewById(R.id.date);
 
