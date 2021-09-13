@@ -184,7 +184,7 @@ public class Mainactivity extends AppCompatActivity {
     public void authority() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)//取得權限
 
-        {//確認使否有授權
+        {//確認使否有授權 good
             if (ContextCompat.checkSelfPermission(Mainactivity.this, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {//跳出來給選擇
                 ActivityCompat.requestPermissions(Mainactivity.this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 1);
 
