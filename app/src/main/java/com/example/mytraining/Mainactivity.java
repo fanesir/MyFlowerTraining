@@ -1,11 +1,16 @@
 package com.example.mytraining;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+
 import androidx.appcompat.app.AppCompatActivity;
 //import androidx.appcompat.widget.PopupMenu;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -13,21 +18,27 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.Image;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
+
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -43,21 +54,16 @@ public class Mainactivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        NavigationView navigationView  = findViewById(R.id.navid);
-
-
-
-
-        FloatingActionButton floatingActionButton = findViewById(R.id.addDataActionButton);
 
         RecyclerView recyclerView = findViewById(R.id.recyview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-         forFirebaseOptions = new ForFirebaseOptions(LoginActivity.USER_ID);//"data"LoginActivity.USER_ID+
+        forFirebaseOptions = new ForFirebaseOptions(LoginActivity.USER_ID);//"data"LoginActivity.USER_ID+
         AdapterForMaimActivity foreMainAdpter = new AdapterForMaimActivity(forFirebaseOptions.Options());
         recyclerView.setAdapter(foreMainAdpter);
         foreMainAdpter.startListening();
 
+
+        FloatingActionButton floatingActionButton = findViewById(R.id.addDataActionButton);
         floatingActionButton.setOnClickListener(v -> {
                     ADDOREDIT = 0;
                     Mainactivity.this.startActivity(new Intent(Mainactivity.this, FloatingActionButtonAddDataSome.class));
@@ -65,9 +71,26 @@ public class Mainactivity extends AppCompatActivity {
                 }
         );
 
-        floatingActionButton.setOnLongClickListener(view -> {
-            Mainactivity.this.startActivity(new Intent(Mainactivity.this, LoginActivity.class));
-            FirebaseAuth.getInstance().signOut();
+        ImageView imageView = findViewById(R.id.sideBarButton);
+        imageView.setOnClickListener(view -> {
+            DrawerLayout drawer = findViewById(R.id.drawer_layoutt);
+            drawer.openDrawer(GravityCompat.START);
+        });
+
+        NavigationView navigationView = findViewById(R.id.navid);
+        GoogleSignInAccount googleSignInAccount = GoogleSignIn.getLastSignedInAccount(this);
+
+        Menu menu = navigationView.getMenu();
+        MenuItem nav_camara = menu.findItem(R.id.useremail);
+        nav_camara.setTitle(googleSignInAccount.getEmail() + "");
+
+        navigationView.setNavigationItemSelectedListener(item -> {
+            int id = item.getItemId();
+            if (id == R.id.itemlogout) {
+                FirebaseAuth.getInstance().signOut();
+                Mainactivity.this.startActivity(new Intent(Mainactivity.this, LoginActivity.class));
+                finish();
+            }
             return false;
         });
         authority();
@@ -122,8 +145,8 @@ public class Mainactivity extends AppCompatActivity {
             });
 
             holder.imageView.setOnClickListener(v -> {
-                Intent intent = new Intent(Mainactivity.this,DateMainActivity.class);
-                DateMainActivity.userkey=model.getuserKey();
+                Intent intent = new Intent(Mainactivity.this, DateMainActivity.class);
+                DateMainActivity.userkey = model.getuserKey();
                 finish();
                 startActivity(intent);
             });
@@ -170,9 +193,15 @@ public class Mainactivity extends AppCompatActivity {
             }
         }
     }
+
     public void onBackPressed() {
-        finish();
+        System.exit(0);
+
     }
+
+
+
+
 }
 
 

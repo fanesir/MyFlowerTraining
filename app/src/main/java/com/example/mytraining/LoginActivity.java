@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         super.onStart();
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
+
             USER_ID = user.getEmail().substring(0, 5) + "";
             Intent intent = new Intent(getApplicationContext(), Mainactivity.class);
             startActivity(intent);
@@ -50,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
 
         // Configure Google Sign In
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("488765907282-vjr21r22jm6rivtacog60k56350cqd0b.apps.googleusercontent.com")//R.string.default_web_client_id
+                .requestIdToken("488765907282-vjr21r22jm6rivtacog60k56350cqd0b.apps.googleusercontent.com")
                 .requestEmail()
                 .build();
 
