@@ -61,7 +61,12 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
         DatabaseReference referenceDatabase = FirebaseDatabase.getInstance().getReference().child(LoginActivity.USER_ID);
 
 
-        clockimageButton.setOnClickListener(v -> timePickerDialog.show(FloatingActionButtonAddDataSome.this.getSupportFragmentManager(), "year_month_day"));
+        clockimageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                timePickerDialog.show(FloatingActionButtonAddDataSome.this.getSupportFragmentManager(), "year_month_day");
+            }
+        });
 
         if (Mainactivity.ADDOREDIT == 0) {
             clockimageButton.setText("增加時間");
@@ -217,7 +222,7 @@ public class FloatingActionButtonAddDataSome extends AppCompatActivity {
 
 
     public String getDateToString(long time) {
-        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
         Date d = new Date(time);
         return sf.format(d).substring(0, 10);
     }
